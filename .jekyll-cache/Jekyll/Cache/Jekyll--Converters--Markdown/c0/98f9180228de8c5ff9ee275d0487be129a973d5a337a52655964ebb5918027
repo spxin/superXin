@@ -1,0 +1,149 @@
+I"�U<h3 id="枚举是一个类">枚举是一个类</h3>
+
+<p>  <strong>枚举在Java中是一个类</strong>，代表着类的一一列举。要想知道枚举具体的使用首先要先知道它的具体的<strong>属性</strong>和<strong>方法</strong>才可以。虽然说我们在实际应用中很少去关注它的属性和方法，而是更多的关注它的<strong>特性</strong>，利用它本身的特性去满足各种有意思的场景。</p>
+
+<hr />
+<h3 id="枚举的属性">枚举的属性</h3>
+<p> 由于上篇内容讲了我们自定义的枚举其实经过编译之后，实际继承的是lang包下的Enum类。虽然我们自定义的枚举类中可能存在不定义私有属性的情况，但继承的Enum类中自身就带有着两个属性，name属性、和ordinal属性。Enum类的源码</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Enum</span><span class="o">&lt;</span><span class="no">E</span> <span class="kd">extends</span> <span class="nc">Enum</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;&gt;</span> <span class="kd">implements</span> <span class="nc">Comparable</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;,</span> <span class="nc">Serializable</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span><span class="c1">//名称</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">ordinal</span><span class="o">;</span><span class="c1">//序数</span>
+
+    <span class="kd">public</span> <span class="kd">final</span> <span class="nc">String</span> <span class="nf">name</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">name</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">final</span> <span class="kt">int</span> <span class="nf">ordinal</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">ordinal</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">protected</span> <span class="nf">Enum</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">int</span> <span class="n">ordinal</span><span class="o">)</span> <span class="o">{</span><span class="c1">//初始化</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">ordinal</span> <span class="o">=</span> <span class="n">ordinal</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">name</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">final</span> <span class="kt">boolean</span> <span class="nf">equals</span><span class="o">(</span><span class="nc">Object</span> <span class="n">other</span><span class="o">)</span> <span class="o">{</span><span class="c1">//枚举中==和equals就是一样的</span>
+        <span class="k">return</span> <span class="k">this</span> <span class="o">==</span> <span class="n">other</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">final</span> <span class="kt">int</span> <span class="nf">hashCode</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">hashCode</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">protected</span> <span class="kd">final</span> <span class="nc">Object</span> <span class="nf">clone</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">CloneNotSupportedException</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nf">CloneNotSupportedException</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">final</span> <span class="kt">int</span> <span class="nf">compareTo</span><span class="o">(</span><span class="no">E</span> <span class="n">o</span><span class="o">)</span> <span class="o">{</span><span class="c1">//重写了compareTo</span>
+        <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">()</span> <span class="o">!=</span> <span class="n">o</span><span class="o">.</span><span class="na">getClass</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="o">.</span><span class="na">getDeclaringClass</span><span class="o">()</span> <span class="o">!=</span> <span class="n">o</span><span class="o">.</span><span class="na">getDeclaringClass</span><span class="o">())</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">ClassCastException</span><span class="o">();</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">ordinal</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="na">ordinal</span><span class="o">;</span><span class="c1">//靠序数比较大小</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">final</span> <span class="nc">Class</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="nf">getDeclaringClass</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clazz</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">();</span>
+        <span class="nc">Class</span><span class="o">&lt;?&gt;</span> <span class="n">zuper</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">.</span><span class="na">getSuperclass</span><span class="o">();</span>
+        <span class="k">return</span> <span class="n">zuper</span> <span class="o">==</span> <span class="nc">Enum</span><span class="o">.</span><span class="na">class</span> <span class="o">?</span> <span class="n">clazz</span> <span class="o">:</span> <span class="n">zuper</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="o">&lt;</span><span class="no">T</span> <span class="kd">extends</span> <span class="nc">Enum</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;&gt;</span> <span class="no">T</span> <span class="nf">valueOf</span><span class="o">(</span><span class="nc">Class</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="n">enumType</span><span class="o">,</span> <span class="nc">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+        <span class="no">T</span> <span class="n">result</span> <span class="o">=</span> <span class="o">(</span><span class="nc">Enum</span><span class="o">)</span><span class="n">enumType</span><span class="o">.</span><span class="na">enumConstantDirectory</span><span class="o">().</span><span class="na">get</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">result</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">name</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">NullPointerException</span><span class="o">(</span><span class="s">"Name is null"</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">IllegalArgumentException</span><span class="o">(</span><span class="s">"No enum constant "</span> <span class="o">+</span> <span class="n">enumType</span><span class="o">.</span><span class="na">getCanonicalName</span><span class="o">()</span> <span class="o">+</span> <span class="s">"."</span> <span class="o">+</span> <span class="n">name</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">protected</span> <span class="kd">final</span> <span class="kt">void</span> <span class="nf">finalize</span><span class="o">()</span> <span class="o">{</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">readObject</span><span class="o">(</span><span class="nc">ObjectInputStream</span> <span class="n">in</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">IOException</span><span class="o">,</span> <span class="nc">ClassNotFoundException</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nf">InvalidObjectException</span><span class="o">(</span><span class="s">"can't deserialize enum"</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">readObjectNoData</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">ObjectStreamException</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nf">InvalidObjectException</span><span class="o">(</span><span class="s">"can't deserialize enum"</span><span class="o">);</span>
+    <span class="o">}}</span>
+</code></pre></div></div>
+<p> name为我们枚举值的名称，而ordinal这个词的意思是“序数”或者说“有顺序的”，其实就是序数。我们知道枚举所代表的就是包含一个以上枚举值的集合，既然是集合它就是有顺序的，而大多数我们使用的时候往往忽略了它的序数这个属性，似乎忘了枚举是枚举这件事了。
+ 枚举中的序号是根据我们的枚举中显示的顺序决定的，其实是是语法糖转换时初始化枚举值时决定了枚举值的序数，枚举中，第一个枚举值的序数总是小于后面枚举值的序数，且序数是从0开始的。</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kd">public</span> <span class="kd">enum</span> <span class="nc">BookLanguageEnum</span> <span class="o">{</span>
+    <span class="no">CHINESE</span><span class="o">(</span><span class="s">"Chinese"</span><span class="o">),</span>
+    <span class="no">ENGLISH</span><span class="o">(</span><span class="s">"English"</span><span class="o">),</span>
+    <span class="no">OHTER</span><span class="o">(</span><span class="s">"Other"</span><span class="o">);</span>
+    <span class="nc">BookLanguageEnum</span> <span class="o">(</span><span class="nc">String</span> <span class="n">language</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">language</span> <span class="o">=</span> <span class="n">language</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">language</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getLanguage</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">language</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span> <span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">){</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="nc">BookLanguageEnum</span><span class="o">.</span><span class="na">CHINESE</span><span class="o">.</span><span class="na">name</span><span class="o">()</span> <span class="o">+</span> <span class="s">"的序数："</span> <span class="o">+</span> <span class="nc">BookLanguageEnum</span><span class="o">.</span><span class="na">CHINESE</span><span class="o">.</span><span class="na">ordinal</span><span class="o">());</span> <span class="c1">//CHINESE的序数：0</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="nc">BookLanguageEnum</span><span class="o">.</span><span class="na">ENGLISH</span><span class="o">.</span><span class="na">name</span><span class="o">()</span> <span class="o">+</span> <span class="s">"的序数："</span> <span class="o">+</span> <span class="nc">BookLanguageEnum</span><span class="o">.</span><span class="na">ENGLISH</span><span class="o">.</span><span class="na">ordinal</span><span class="o">());</span> <span class="c1">//ENGLISH的序数：1</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="nc">BookLanguageEnum</span><span class="o">.</span><span class="na">OHTER</span><span class="o">.</span><span class="na">name</span><span class="o">()</span> <span class="o">+</span> <span class="s">"的序数："</span> <span class="o">+</span> <span class="nc">BookLanguageEnum</span><span class="o">.</span><span class="na">OHTER</span><span class="o">.</span><span class="na">ordinal</span><span class="o">());</span> <span class="c1">//OHTER的序数：2</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<hr />
+<h3 id="枚举的方法">枚举的方法</h3>
+<p> 接着上面讲的序数ordinal，针对序数我们先讲枚举的values()方法。</p>
+<h4 id="values">values()</h4>
+<p>作为一个枚举值的集合，所必须要有的操作肯定是遍历，这也是静态常量所没有的支持的。values()其实就是获取我们枚举值的数组：</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kd">public</span> <span class="kd">enum</span> <span class="nc">BookLanguageEnum</span> <span class="o">{</span>
+    <span class="no">CHINESE</span><span class="o">(</span><span class="s">"Chinese"</span><span class="o">),</span>
+    <span class="no">ENGLISH</span><span class="o">(</span><span class="s">"English"</span><span class="o">),</span>
+    <span class="no">OHTER</span><span class="o">(</span><span class="s">"Other"</span><span class="o">);</span>
+    <span class="nc">BookLanguageEnum</span> <span class="o">(</span><span class="nc">String</span> <span class="n">language</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">language</span> <span class="o">=</span> <span class="n">language</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">language</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getLanguage</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">language</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span> <span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">){</span>
+        <span class="k">for</span> <span class="o">(</span><span class="nc">BookLanguageEnum</span> <span class="nl">languageEnum:</span> <span class="nc">BookLanguageEnum</span><span class="o">.</span><span class="na">values</span><span class="o">()){</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">languageEnum</span><span class="o">);</span>
+        <span class="o">}</span>
+       <span class="cm">/**得到的结果 
+       * CHINESE 
+       * ENGLISH 
+       * OHTER 
+       */</span>
+    <span class="o">}</span>
+ <span class="o">}</span>
+</code></pre></div></div>
+<p> 虽然我们自定义的枚举类是可以使用这个方法的，但继承的Enum类却没有这个方法，其实values()这个方法是很特殊的一个方法，之前说过枚举是一种语法糖，在它真正编译后，就会产生values()这个方法，所以我们自定义的枚举类是可以使用这个方法的，而且values()方法所返回的其实是一个浅拷贝；</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span> <span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">){</span>
+        <span class="nc">BookLanguageEnum</span><span class="o">[]</span> <span class="n">list1</span> <span class="o">=</span> <span class="nc">BookLanguageEnum</span><span class="o">.</span><span class="na">values</span><span class="o">();</span>
+        <span class="nc">BookLanguageEnum</span><span class="o">[]</span> <span class="n">list2</span> <span class="o">=</span> <span class="nc">BookLanguageEnum</span><span class="o">.</span><span class="na">values</span><span class="o">();</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">list1</span> <span class="o">==</span> <span class="n">list2</span><span class="o">);</span> <span class="c1">// false</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">list1</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">==</span> <span class="n">list2</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span> <span class="c1">// true</span>
+    <span class="o">}</span>
+</code></pre></div></div>
+<h4 id="valueof">valueOf()</h4>
+<p> 前面说到枚举有两个属性，name和ordinal，但实际上枚举只提供了根据name来获取具体枚举值的方法，却没有提供根据ordinal来获取具体枚举值的方法，但是values()方法也算是另外一种弥补了，根据values()得到的数据再根据ordinal序数获取具体的枚举值其实也是一样的效果。valueOf()方法就是那个根据name获取具体枚举值的方法，使用案例：</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span> <span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">){</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="nc">BookLanguageEnum</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="s">"CHINESE"</span><span class="o">).</span><span class="na">getLanguage</span><span class="o">());</span> <span class="c1">// Chinese</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="nc">Enum</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="nc">BookLanguageEnum</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="s">"CHINESE"</span><span class="o">).</span><span class="na">getLanguage</span><span class="o">());</span> <span class="c1">// Chinese</span>
+ <span class="o">}</span>
+</code></pre></div></div>
+<p>可选姿势为两种，一参和两参，具体看案例。</p>
+:ET
